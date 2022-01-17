@@ -86,9 +86,10 @@ const getUserPayments = ( payments: IPaymentMethod[] ): AnyAction => ({
 export function createUserPayment ( payment: IPaymentMethod ) {
     return async (dispatch: Dispatch) => {
         try {
-            await axiosClient.post('/payments', {payment_method: payment});
+            const result = await axiosClient.post('/payments', {payment_method: payment});
+            const { lastInsertRowid } = result.data;
 
-            dispatch( postUserPayment(payment) );
+            dispatch( postUserPayment( {id: lastInsertRowid, ...payment} ) );
         } catch (error) {
             console.error(error);
             return;

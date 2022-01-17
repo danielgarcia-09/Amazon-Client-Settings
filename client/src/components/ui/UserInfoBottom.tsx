@@ -106,8 +106,6 @@ const UserBottom = ({ orders, payments }: Props) => {
       <div>
         <h1>Messages</h1>
         <Messages>
-          <div>1</div>
-          <div>2</div>
         </Messages>
       </div>
     </DataGrid>

@@ -1,9 +1,10 @@
-const orderController = require("./orderController");
-const paymentController = require("./paymentController");
-const userController = require("./userController");
+const authController = require("./auth.controller");
+const orderController = require("./order.controller");
+const paymentController = require("./payment.controller");
+
 
 module.exports = {
   orderController,
   paymentController,
-  userController,
+  authController,
 };

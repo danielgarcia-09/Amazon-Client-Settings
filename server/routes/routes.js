@@ -1,27 +1,30 @@
 const express = require("express");
 const {
-  userController,
+  authController,
   orderController,
   paymentController,
 } = require("../controllers/index");
+const authenticate = require("../middlewares/auth");
 const router = express.Router();
 
-//* User endpoints
-router.get("/user/:id", userController.getUserById);
-router.post("/user", userController.createUser);
-router.put("/user/:id", userController.editUser);
-router.delete('/user/:id', userController.deleteUser);
+//* Auth endpoints
+router.get("/auth/:id",authenticate, authController.getUserById);
+router.get("/auth",authenticate, authController.authUser);
+router.post("/user", authController.createUser);
+router.post("/auth", authController.login);
+router.put("/auth/:id", authenticate, authController.editUser);
+router.delete('/auth/:id', authenticate, authController.deleteUser);
 
 //? Order endpoints
-router.get("/orders/:id", orderController.getOrders);
-router.get("/order/:id", orderController.getOrderById);
-router.post("/orders/:id", orderController.createOrder);
-router.delete("/orders/:id", orderController.deleteOrder);
+router.get("/orders/:id", authenticate, orderController.getOrders);
+router.get("/order/:id", authenticate, orderController.getOrderById);
+router.post("/orders/:id", authenticate, orderController.createOrder);
+router.delete("/orders/:id", authenticate, orderController.deleteOrder);
 
 //! Payment endpoints
-router.post("/payments", paymentController.createPayment);
-router.get("/payments/:id", paymentController.getPaymentsByUserId);
-router.get("/payment/:id", paymentController.getPaymentById);
-router.delete("/payment/:id", paymentController.deletePayment);
+router.post("/payments", authenticate, paymentController.createPayment);
+router.get("/payments/:id", authenticate, paymentController.getPaymentsByUserId);
+router.get("/payment/:id", authenticate, paymentController.getPaymentById);
+router.delete("/payment/:id", authenticate, paymentController.deletePayment);
 
 module.exports = router;
