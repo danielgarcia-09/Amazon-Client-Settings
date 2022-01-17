@@ -4,14 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { IPaymentMethod, UserState } from "../../types";
 import FormBlock from "../ui/FormBlock";
 import { Form, MainSection } from "../ui/Sections";
-import {
-  PaymentButtonBlock,
-  PaymentSubmitButton
-} from "../ui/PaymentStyles";
+import { PaymentButtonBlock, PaymentSubmitButton } from "../ui/PaymentStyles";
 import { createUserPayment } from "../../store/actions/userActions";
 
 const CreatePayment = () => {
-  
   //* Global user
   const user = useSelector((state: UserState) => state.user);
 
@@ -60,8 +56,12 @@ const CreatePayment = () => {
       return;
     }
 
+    setError(false);
+
+    //* Giving user's id to the new payment method
     newCard.user_id = user.id;
 
+    //* Calling action dispatch
     dispatch(createUserPayment(newCard));
 
     //* after creating erase old state
@@ -69,6 +69,15 @@ const CreatePayment = () => {
 
     //* then navigate to index
     navigate("/");
+  };
+
+  const errorStyle: React.CSSProperties = {
+    textAlign: "center",
+    marginTop: "-100px",
+    marginBottom: "6rem",
+    color: "white",
+    padding: '1rem 3rem',
+    backgroundColor: 'red'
   };
 
   return (
@@ -119,7 +128,7 @@ const CreatePayment = () => {
           </FormBlock>
         </div>
 
-        <h1>{error ? 'Faltan datos' : null}</h1>
+        <h1 style={errorStyle}>{error ? "Faltan datos" : null}</h1>
         <PaymentButtonBlock>
           <PaymentSubmitButton type="submit">Create</PaymentSubmitButton>
         </PaymentButtonBlock>
