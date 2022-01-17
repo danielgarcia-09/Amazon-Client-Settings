@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently --kill-others --names 'SERVER,CLIENT' -c 'black.bgYellow,black.bgBlue' \"npm --prefix ./server run dev\"  \"npm --prefix ./client start\" ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install-all": "npm i && npm --prefix ./client i && npm --prefix ./server i"
   },
   "author": "Daniel Garcia",
   "license": "ISC",

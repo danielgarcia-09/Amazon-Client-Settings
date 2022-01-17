@@ -8,7 +8,7 @@ import {
 import thunk from "redux-thunk";
 import userReducer from "./store/reducers/userReducer";
 import { UserState } from "./types";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { composeWithDevTools } from "@redux-devtools/extension";
 import { loadState, saveState } from "./config/state";
 
 const persistedState = loadState();
