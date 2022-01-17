@@ -1,0 +1,15 @@
+{
+  "name": "solvex_test",
+  "version": "1.0.0",
+  "description": "client and server for solvex test",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently --kill-others --names 'SERVER,CLIENT' -c 'black.bgYellow,black.bgBlue' \"npm --prefix ./server run dev\"  \"npm --prefix ./client start\" ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Garcia",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  }
+}
