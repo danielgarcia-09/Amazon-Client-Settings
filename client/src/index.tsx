@@ -16,6 +16,7 @@ import Orders from "./components/orders/Orders";
 import CreateOrder from "./components/orders/CreateOrder";
 import Address from "./components/address/Address";
 import CreateAddress from "./components/address/CreateAddress";
+import EditAddress from "./components/address/EditAddress";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -34,6 +35,7 @@ ReactDOM.render(
             <Route path="/new-order" element={<CreateOrder />} />
             <Route path="/address" element={<Address />} />
             <Route path="/new-address" element={<CreateAddress />} />
+            <Route path="/edit-address/:id" element={<EditAddress />} />
           </Routes>
         </BrowserRouter>
       </PersistGate>

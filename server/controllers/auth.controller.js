@@ -78,7 +78,7 @@ authController.login = async (req, res) => {
     jwt.sign(
       payload,
       process.env.SECRET_KEY,
-      { expiresIn: "1h" },
+      { expiresIn: "2h" },
       (err, token) => {
         if (err) throw err;
 
@@ -111,7 +111,8 @@ authController.editUser = async (req, res) => {
             name = @name,
             user_name = @user_name, 
             password = @password,
-            telephone = @telephone
+            telephone = @telephone,
+            email = @email
         WHERE id = ${id}`
       )
       .run(user);

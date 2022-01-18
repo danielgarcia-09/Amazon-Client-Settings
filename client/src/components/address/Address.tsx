@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { UserState } from "../../types";
-import {} from "../../store/actions/userActions";
+import { deleteAddressAction, getAddress } from "../../store/actions/userActions";
 import Layout from "../ui/Layout";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
@@ -28,9 +28,9 @@ const DashedCard = styled.div`
   }
 `;
 
-const Payments = () => {
+const Address = () => {
   //* Global payments
-  const { isAuth, adresses } = useSelector((state: UserState) => state);
+  const { user, isAuth,token, adresses } = useSelector((state: UserState) => state);
 
   //* Navigation
   let navigate = useNavigate();
@@ -40,31 +40,35 @@ const Payments = () => {
     if (!isAuth) {
       navigate("/");
     }
-  }, [isAuth]);
+
+    if( adresses.length === 0) {
+      dispatch( getAddress(user.id) );
+    }
+  }, [adresses,token, isAuth]);
 
   //* Dispatch for actions
   const dispatch = useDispatch();
 
   const deleteAddress = (id: number) => {
-    dispatch(id);
+    dispatch( deleteAddressAction(id) );
   };
 
   return (
     <Layout>
-      <h1 className="text-center mt-5">Payment Methods</h1>
+      <h1 className="text-center mt-5">Address</h1>
       <div className="container py-5 px-1 mx-auto">
         <div className="row justify-content-between justify-content-sm-center">
-          <DashedCard className="card col-sm-6 p-0 m-3">
-            <Link to={"/new-payment"}>
+          <DashedCard key={9999} className="card col-sm-6 p-0 m-3">
+            <Link to={"/new-address"}>
               +
               <br />
-              <span>New method</span>
+              <span>New address</span>
             </Link>
           </DashedCard>
 
           {adresses.map((address) => (
             <div
-              className="card col-sm-6 p-0 border-warning m-3"
+              className="card col-sm-6 p-0 border-dark m-3"
               style={{ maxWidth: "300px" }}
               key={address.id}
             >
@@ -78,7 +82,7 @@ const Payments = () => {
                 </p>
                 <div className="text-center">
                   <Link
-                    to={`/edit-payment/${address.id}`}
+                    to={`/edit-address/${address.id}`}
                     className="btn btn-primary"
                   >
                     Edit
@@ -100,4 +104,4 @@ const Payments = () => {
   );
 };
 
-export default Payments;
+export default Address;

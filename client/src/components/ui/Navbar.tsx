@@ -57,6 +57,11 @@ const Navbar = () => {
                     Payments
                   </a>
                 </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="address">
+                    Address
+                  </a>
+                </li>
               </Fragment>
             )}
           </ul>

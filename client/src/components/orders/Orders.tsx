@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { UserState } from "../../types";
-import {  } from "../../store/actions/userActions";
+import { deleteOrderAction } from "../../store/actions/userActions";
 import Layout from "../ui/Layout";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
@@ -46,7 +46,7 @@ const Orders = () => {
   const dispatch = useDispatch();
 
   const deleteOrder = (id: number) => {
-    // dispatch((id));
+    dispatch( deleteOrderAction(id));
   };
 
   return (

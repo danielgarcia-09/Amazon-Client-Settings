@@ -6,6 +6,7 @@ import InputError from "../ui/InputError";
 import { useDispatch, useSelector } from "react-redux";
 import { editUserPaymentAction } from "../../store/actions/userActions";
 import { useNavigate, useParams } from "react-router-dom";
+import { isEmpty } from "../../config/isEmpty";
 
 const EditPayment = () => {
 
@@ -33,7 +34,7 @@ const EditPayment = () => {
   const [error, setError] = useState(false);
 
   //* Extracting values
-  const { id, user_id, card_number, cvv, company, valid_until } = editPayment;
+  const { card_number, cvv, company, valid_until } = editPayment;
 
   //* handling input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,14 +51,6 @@ const EditPayment = () => {
     })
   }
 
-  //* Check for empty values
-  const isEmpty = Object.values(editPayment).some((v) => {
-    if (v === "") {
-      return true;
-    }
-    return false;
-  });
-
   //* Dispatch
   const dispatch = useDispatch();
 
@@ -68,7 +61,7 @@ const EditPayment = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isEmpty) {
+    if (isEmpty(editPayment)) {
       setError(true);
       return;
     }

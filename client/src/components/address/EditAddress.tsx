@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { IAddress, IOrders, UserState } from "../../types";
+import { IAddress, UserState } from "../../types";
 import Layout from "../ui/Layout";
-import InputMask from "react-input-mask";
 import InputError from "../ui/InputError";
 import { useDispatch, useSelector } from "react-redux";
-import { createAddressAction } from "../../store/actions/userActions";
-import { useNavigate } from "react-router-dom";
+import { editAddressAction } from "../../store/actions/userActions";
+import { useNavigate, useParams } from "react-router-dom";
 import { isEmpty } from "../../config/isEmpty";
 
-const CreateAddress = () => {
-  //* Global user
-  const { user, isAuth } = useSelector((state: UserState) => state);
+const EditAddress = () => {
+  //* Global address
+  const { adresses, isAuth } = useSelector((state: UserState) => state);
 
-  //* initial state
-  const stateConfig: IAddress = {
-    user_id: user.id,
-    address1: "",
-    address2: "",
-    zip_code: "",
-  };
+  //* URL Params
+  const params = useParams();
+
+  //* Address to edit
+  const edit = adresses.find((a) => a.id === Number(params.id));
 
   //* Check if auth
   useEffect(() => {
@@ -28,25 +25,25 @@ const CreateAddress = () => {
   }, [isAuth]);
 
   //* state
-  const [newAddress, setNewAddress] = useState<IAddress>(stateConfig);
+  const [editAddress, setEditAddress] = useState<IAddress>({...edit});
 
   //! error state
   const [error, setError] = useState(false);
 
   //* Extracting values
-  const { address1, address2, zip_code } = newAddress;
+  const { address1, address2, zip_code } = editAddress;
 
   //* handling input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewAddress({
-      ...newAddress,
+    setEditAddress({
+      ...editAddress,
       [e.target.name]: e.target.value,
     });
   };
 
   const handleTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setNewAddress({
-      ...newAddress,
+    setEditAddress({
+      ...editAddress,
       [e.target.name]: e.target.value,
     });
   };
@@ -61,14 +58,14 @@ const CreateAddress = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isEmpty(newAddress)) {
+    if (isEmpty(editAddress)) {
       setError(true);
       return;
     }
 
     setError(false);
 
-    dispatch( createAddressAction( newAddress ));
+    dispatch(editAddressAction(editAddress));
 
     navigate("/address");
   };
@@ -76,7 +73,7 @@ const CreateAddress = () => {
   return (
     <Layout>
       <div className="container px-5 my-5">
-        <h1 className="text-center mb-4">Create Address</h1>
+        <h1 className="text-center mb-4">Edit Address</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label" htmlFor="address1">
@@ -133,4 +130,4 @@ const CreateAddress = () => {
     </Layout>
   );
 };
-export default CreateAddress;
+export default EditAddress;

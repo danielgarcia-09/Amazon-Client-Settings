@@ -2,7 +2,7 @@ import { AnyAction, Dispatch } from "redux";
 import storage from "redux-persist/lib/storage";
 import axiosClient from "../../config/axios";
 import tokenAuth from "../../config/token";
-import { IOrders, IPaymentMethod, IUser } from "../../types";
+import { IAddress, IOrders, IPaymentMethod, IUser } from "../../types";
 import {
   CREATE_USER_PAYMENT,
   DELETE_USER,
@@ -17,6 +17,11 @@ import {
   USER_AUTENTICATED,
   USER_CREATED,
   CREATE_USER_ORDER,
+  CREATE_ADDRESS,
+  EDIT_ADDRESS,
+  GET_ADDRESS,
+  DELETE_ADDRESS,
+  EDIT_ORDER,
 } from "./actionTypes";
 import { Alert, AlertCanceled, AlertSuccess } from "../../config/alerts";
 
@@ -163,8 +168,8 @@ const getUserOrders = (orders: IOrders[]): AnyAction => ({
 export function createOrderAction(user_id: number, order: IOrders) {
   return async (dispatch: Dispatch) => {
     try {
-      const result = await axiosClient.post(`/orders/${user_id}`, {order});
-      if( result.data.changes === 1 ) dispatch( createOrder( order ) );
+      const result = await axiosClient.post(`/orders/${user_id}`, { order });
+      if (result.data.changes === 1) dispatch(createOrder(order));
 
       return;
     } catch (error) {
@@ -172,10 +177,63 @@ export function createOrderAction(user_id: number, order: IOrders) {
     }
   };
 }
-const createOrder = ( order: IOrders ): AnyAction => ({
+const createOrder = (order: IOrders): AnyAction => ({
   type: CREATE_USER_ORDER,
-  payload: order
-})
+  payload: order,
+});
+
+export function editOrdersAction(order: IOrders) {
+  return async (dispatch: Dispatch) => {
+    try {
+      const result = await axiosClient.put(`/order/${order.order_id}`, {
+        order
+      });
+      if (result.data.changes === 1) {
+        dispatch(editOrder(order));
+      } else {
+        return;
+      }
+    } catch (error: any) {
+      console.error(error.response.error.message);
+      return;
+    }
+  };
+}
+const editOrder = (order: IOrders): AnyAction => ({
+  type: EDIT_ORDER,
+  payload: order,
+});
+
+export function deleteOrderAction(id: number) {
+  return async (dispatch: Dispatch) => {
+    const verify = await Alert("Do you really want to delete this?");
+
+    if (verify.isConfirmed) {
+      try {
+        const result = await axiosClient.delete(`/orders/${id}`);
+
+        if (result.data.changes === 1) {
+          AlertSuccess();
+          dispatch(deleteOrder(id));
+        } else {
+          return;
+        }
+      } catch (error: any) {
+        console.error(error.response.data.error.message);
+        return;
+      }
+    } else {
+      return;
+    }
+  };
+}
+
+const deleteOrder = (id: number): AnyAction => ({
+  type: DELETE_USER_PAYMENT,
+  payload: id,
+});
+
+//* *****************************************************************************
 
 export function obtainUserPayment(id: number | undefined, limit: number = 3) {
   return async (dispatch: Dispatch) => {
@@ -191,7 +249,6 @@ export function obtainUserPayment(id: number | undefined, limit: number = 3) {
     }
   };
 }
-
 const getUserPayments = (payments: IPaymentMethod[]): AnyAction => ({
   type: GET_USER_PAYMENTS,
   payload: payments,
@@ -266,5 +323,99 @@ export function deleteUserPayment(id: number) {
 
 const deletePayment = (id: number): AnyAction => ({
   type: DELETE_USER_PAYMENT,
+  payload: id,
+});
+
+//* ***************************************************************************
+
+export function getAddress(id: number | undefined) {
+  return async (dispatch: Dispatch) => {
+    try {
+      const result = await axiosClient.get(`/address/${id}`);
+
+      const { adresses } = result.data;
+
+      dispatch(getAddresses(adresses));
+    } catch (error: any) {
+      // console.error(error.response.data.error.message);
+      return;
+    }
+  };
+}
+
+const getAddresses = (adresses: IAddress[]): AnyAction => ({
+  type: GET_ADDRESS,
+  payload: adresses,
+});
+
+export function createAddressAction(address: IAddress) {
+  return async (dispatch: Dispatch) => {
+    try {
+      const result = await axiosClient.post("/address", { address });
+      const { changes, lastInsertRowId } = result.data;
+      if (changes === 1) {
+        dispatch(createAddress( {id: lastInsertRowId, ...address}));
+        AlertSuccess();
+      } else {
+        return;
+      }
+    } catch (error) {
+      return;
+    }
+  };
+}
+const createAddress = (address: IAddress): AnyAction => ({
+  type: CREATE_ADDRESS,
+  payload: address,
+});
+
+export function editAddressAction(address: IAddress) {
+  return async (dispatch: Dispatch) => {
+    try {
+      const result = await axiosClient.put(`/address/${address.id}`, {
+       address
+      });
+      if (result.data.changes === 1) {
+        dispatch(editAddress(address));
+      } else {
+        return;
+      }
+    } catch (error: any) {
+      console.error(error.response.error.message);
+      return;
+    }
+  };
+}
+const editAddress = (address: IAddress): AnyAction => ({
+  type: EDIT_ADDRESS,
+  payload: address,
+});
+
+export function deleteAddressAction(id: number) {
+  return async (dispatch: Dispatch) => {
+    const verify = await Alert("Do you really want to delete this?");
+
+    if (verify.isConfirmed) {
+      try {
+        const result = await axiosClient.delete(`/address/${id}`);
+
+        if (result.data.changes === 1) {
+          AlertSuccess();
+          dispatch(deleteAddress(id));
+        } else {
+          return;
+        }
+      } catch (error: any) {
+        console.error(error.response.data.error.message);
+        return;
+      }
+    } else {
+      return;
+    }
+  };
+}
+
+const deleteAddress = (id: number): AnyAction => ({
+  type: DELETE_ADDRESS,
   payload: id,
 });

@@ -4,8 +4,9 @@ import Layout from "../ui/Layout";
 import InputMask from "react-input-mask";
 import InputError from "../ui/InputError";
 import { useDispatch, useSelector } from "react-redux";
-import { createUserPayment, editUserAction } from "../../store/actions/userActions";
+import { createUserPayment } from "../../store/actions/userActions";
 import { useNavigate } from "react-router-dom";
+import { isEmpty } from "../../config/isEmpty";
 
 const CreatePayment = () => {
   //* initial state
@@ -50,14 +51,6 @@ const CreatePayment = () => {
     })
   }
 
-  //* Check for empty values
-  const isEmpty = Object.values(newPayment).some((v) => {
-    if (v === "") {
-      return true;
-    }
-    return false;
-  });
-
   //* Dispatch
   const dispatch = useDispatch();
 
@@ -68,7 +61,7 @@ const CreatePayment = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isEmpty) {
+    if (isEmpty(newPayment)) {
       setError(true);
       return;
     }

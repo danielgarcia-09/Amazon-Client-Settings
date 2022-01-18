@@ -45,7 +45,7 @@ addressController.editAddress = (req, res) => {
 
   const query = db
     .prepare(
-      `UPDATE address SET user_id = @user_id, address1 = @address1, address2 = @address2, zip_code = @zip_code WHERE id = ${id})`
+      `UPDATE address SET user_id = @user_id, address1 = @address1, address2 = @address2, zip_code = @zip_code WHERE id = ${id}`
     )
     .run(address);
 
@@ -62,7 +62,7 @@ addressController.editAddress = (req, res) => {
 addressController.deleteAddress = (req, res) => {
   const { id } = req.params;
 
-  const query = db.prepare(`DELETE FROM address WHERE id = ${id})`).run();
+  const query = db.prepare(`DELETE FROM address WHERE id = ${id}`).run();
 
   if (query.changes === 0)
     return res.status(404).json({

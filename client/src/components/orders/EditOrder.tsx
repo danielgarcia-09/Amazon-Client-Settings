@@ -4,25 +4,19 @@ import Layout from "../ui/Layout";
 import InputMask from "react-input-mask";
 import InputError from "../ui/InputError";
 import { useDispatch, useSelector } from "react-redux";
-import { createOrderAction } from "../../store/actions/userActions";
-import { useNavigate } from "react-router-dom";
+import {  } from "../../store/actions/userActions";
+import { useNavigate, useParams } from "react-router-dom";
 import { isEmpty } from "../../config/isEmpty";
 
-const CreateOrder = () => {
+const EditOrder = () => {
   //* Global user
-  const { user, adresses, isAuth } = useSelector((state: UserState) => state);
+  const { user,orders, adresses, isAuth } = useSelector((state: UserState) => state);
 
-  //* initial state
-  const stateConfig: IOrders = {
-    user_id: user.id,
-    address_id: undefined,
-    price: 0,
-    name: "",
-    rating: 0,
-    manufacturer: "",
-    item_info: "",
-    quantity: 0,
-  };
+    //* URL Params
+    let params = useParams();
+
+    //* Order to edit
+    const edit = orders.find( o => o.order_id === Number(params.id));
 
   //* Check if auth
   useEffect(() => {
@@ -32,26 +26,25 @@ const CreateOrder = () => {
   }, [isAuth]);
 
   //* state
-  const [newOrder, setNewOrder] = useState<IOrders>(stateConfig);
+  const [editOrder, setEditOrder] = useState<IOrders>({...edit});
 
   //! error state
   const [error, setError] = useState(false);
 
   //* Extracting values
-  const { name, rating, price, manufacturer, item_info, quantity, address_id } =
-    newOrder;
+  const { name, rating, price, manufacturer, item_info, quantity, address_id } = editOrder;
 
   //* handling input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewOrder({
-      ...newOrder,
+    setEditOrder({
+      ...editOrder,
       [e.target.name]: e.target.value,
     });
   };
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNewOrder({
-      ...newOrder,
+    setEditOrder({
+      ...editOrder,
       [e.target.name]: e.target.value,
     });
   };
@@ -61,22 +54,23 @@ const CreateOrder = () => {
 
   //* Navigate
   const navigate = useNavigate();
+
   //* handling submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isEmpty(newOrder)) {
+    if (isEmpty(editOrder)) {
       setError(true);
       return;
     }
 
     setError(false);
-    
-    newOrder.address_id = Number(address_id);
+console.log(editOrder);
 
-    dispatch(createOrderAction(Number(user.id), newOrder));
 
-    navigate("/orders");
+    // dispatch((newOrder));
+
+    // navigate("/orders");
   };
 
   return (
@@ -179,12 +173,10 @@ const CreateOrder = () => {
               name="address_id"
               placeholder="Address"
             >
-              <option value={""}></option>
-              {adresses.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.address1}
-                </option>
-              ))}
+                <option value={''}></option>
+                {adresses.map( a => (
+                    <option key={a.id} value={a.id}>{a.address1}</option>
+                ))}
             </select>
           </div>
 
@@ -205,4 +197,4 @@ const CreateOrder = () => {
     </Layout>
   );
 };
-export default CreateOrder;
+export default EditOrder;

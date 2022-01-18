@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   deleteUserAction,
+  getAddress,
   obtainUserOrders,
   obtainUserPayment as obtainUserPayments,
 } from "../../store/actions/userActions";
@@ -28,6 +29,7 @@ const UserIndex = () => {
     if (user.id !== undefined && isAuth && token) {
       dispatch(obtainUserOrders(user.id));
       dispatch(obtainUserPayments(user.id));
+      dispatch( getAddress(user.id) );
     }
   }, [token, user, isAuth]);
 
