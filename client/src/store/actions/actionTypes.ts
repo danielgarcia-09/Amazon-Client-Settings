@@ -1,4 +1,7 @@
-export const GET_USER_INFO = "GET_USER_INFO";
+export const USER_AUTENTICATED = "USER_AUTENTICATED";
+export const LOGIN_ERROR = "USER_ERROR";
+export const SIGN_OFF_USER = "SIGN_OFF_USER";
+export const GET_USER = "GET_USER";
 export const UPDATE_USER_INFO = "UPDATE_USER_INFO";
 
 export const GET_USER_ORDERS = "GET_USER_ORDERS";

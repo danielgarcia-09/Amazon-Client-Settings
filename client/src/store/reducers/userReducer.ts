@@ -1,23 +1,54 @@
 import { AnyAction } from "redux";
 import { UserState } from "../../types";
-import { CREATE_USER_PAYMENT, DELETE_USER_PAYMENT, GET_USER_INFO, GET_USER_ORDERS, GET_USER_PAYMENTS, UPDATE_USER_INFO } from "../actions/actionTypes";
+import { CREATE_USER_PAYMENT, DELETE_USER_PAYMENT,GET_USER, GET_USER_ORDERS, GET_USER_PAYMENTS, LOGIN_ERROR, SIGN_OFF_USER, UPDATE_USER_INFO, USER_AUTENTICATED } from "../actions/actionTypes";
 
 const initialState: UserState  = {
     user: {},
     orders: [],
-    payments: []
+    payments: [],
+    loginError: null,
+    isAuth: false,
+    token: localStorage.getItem('token'),
+    loading: false,
 };
 
 export default function userReducer( state: UserState = initialState, action: AnyAction): UserState {
     switch(action.type) {
         case UPDATE_USER_INFO:
-        case GET_USER_INFO: {
+        case GET_USER: {
             return {
                 ...state,
-                user: action.payload
+                isAuth: true,
+                user: action.payload,
+                loading: false,
             }
         }
         
+        case USER_AUTENTICATED: {
+            localStorage.setItem('token', action.payload);
+            return {
+                ...state,
+                isAuth: true,
+                loginError: null,
+                token: action.payload,
+                loading: true,
+            }
+        }
+
+        case LOGIN_ERROR: {
+            return {
+                ...state,
+                isAuth: false,
+                loginError: action.payload,
+            }
+        }
+
+        case SIGN_OFF_USER: {
+            return {
+                ...initialState,
+                token: null
+            }
+        }
 
         case GET_USER_ORDERS: {
             return {

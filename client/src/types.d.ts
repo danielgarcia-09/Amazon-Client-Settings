@@ -36,6 +36,10 @@ export interface IUser {
 }
 export type UserState = {
     user: IUser,
+    token: string | null,
+    isAuth: boolean,
+    loginError: string | null,
     orders: IOrders[],
-    payments: IPaymentMethod[]
+    payments: IPaymentMethod[],
+    loading: boolean
 }

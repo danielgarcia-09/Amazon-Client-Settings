@@ -1,12 +1,16 @@
 import React from 'react';
-import './App.css';
-import UserInfo from './components/user/UserInfo';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Layout from './components/ui/Layout';
+import Login from './components/auth/Login';
+import tokenAuth from './config/token';
+
+const token = localStorage.getItem('token');
+if ( token ) tokenAuth(token);
 
 function App() {
   return (
      <Layout>
-        <UserInfo/>
+        <Login />
      </Layout>
   );
 }
