@@ -91,7 +91,7 @@ const CreatePayment = () => {
   return (
     <Layout>
       <div className="container px-5 my-5">
-        <h1 className="text-center mb-4">Edit Account</h1>
+        <h1 className="text-center mb-4">Create Payment Method</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label" htmlFor="card_number">

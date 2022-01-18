@@ -4,26 +4,27 @@ import Layout from "../ui/Layout";
 import InputMask from "react-input-mask";
 import InputError from "../ui/InputError";
 import { useDispatch, useSelector } from "react-redux";
-import { createUserPayment, editUserPaymentAction } from "../../store/actions/userActions";
+import { editUserPaymentAction } from "../../store/actions/userActions";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EditPayment = () => {
 
   //* Global array of  payments
-  const { payments, isAuth } = useSelector((state: UserState) => state);
+  const { user, payments, isAuth } = useSelector((state: UserState) => state);
 
   //* URL Params
   let params = useParams();
 
   //* Payment to edit
-  const edit = payments.find( p => p.id === params.id);
+  const edit = payments.find( p => p.id === Number(params.id));
+  console.log(edit);
 
   //* Check if auth
   useEffect(() => {
-    if (!isAuth) {
+    if (!isAuth || !user) {
       navigate("/");
     }
-  }, [isAuth]);
+  }, [isAuth, user]);
 
   //* state
   const [editPayment, setEditPayment] = useState({...edit});
@@ -74,16 +75,7 @@ const EditPayment = () => {
 
     setError(false);
 
-    const payload: IPaymentMethod = {
-      id,
-      user_id,
-      card_number,
-      cvv,
-      company,
-      valid_until,
-    };
-
-    dispatch( editUserPaymentAction(payload) );
+    dispatch( editUserPaymentAction(editPayment) );
 
     navigate("/payments");
   };
@@ -91,7 +83,7 @@ const EditPayment = () => {
   return (
     <Layout>
       <div className="container px-5 my-5">
-        <h1 className="text-center mb-4">Edit Account</h1>
+        <h1 className="text-center mb-4">Edit Payment Method</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label" htmlFor="card_number">

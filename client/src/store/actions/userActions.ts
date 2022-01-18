@@ -205,7 +205,7 @@ export function editUserPaymentAction ( payment: IPaymentMethod ) {
     try {
       const result = await axiosClient.put(`/payment/${payment.id}`, {payment_method: payment} );
       if( result.data.changes === 1 ) {
-        dispatch(updateUserPayment(result.data.user));
+        dispatch(editUserPayment( payment ));
       }else {
         return;
       }
@@ -215,7 +215,7 @@ export function editUserPaymentAction ( payment: IPaymentMethod ) {
     }
   }
 }
-const updateUserPayment = ( payment: IPaymentMethod ): AnyAction => ({
+const editUserPayment = ( payment: IPaymentMethod ): AnyAction => ({
   type: EDIT_USER_PAYMENT,
   payload: payment
 })

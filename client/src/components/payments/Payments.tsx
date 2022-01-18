@@ -4,6 +4,7 @@ import { UserState } from "../../types";
 import { deleteUserPayment } from "../../store/actions/userActions";
 import Layout from "../ui/Layout";
 import styled from "@emotion/styled";
+import { useEffect } from "react";
 
 const DashedCard = styled.div`
   max-width: 300px;
@@ -11,17 +12,35 @@ const DashedCard = styled.div`
   text-align: center;
   line-height: inherit;
   font-size: 8rem;
-  
+
   a {
+    margin-top: -10px
+    position: relative;
     text-decoration: none !important;
     color: gray;
   }
-  
+
+  a > span {
+    position: absolute;
+    top: 65%;
+    right: 32%;
+    font-size: 1rem;
+  }
 `;
 
 const Payments = () => {
   //* Global payments
-  const payments = useSelector((state: UserState) => state.payments);
+  const { isAuth, payments } = useSelector((state: UserState) => state);
+
+  //* Navigation
+  let navigate = useNavigate();
+
+  //* Check if auth
+  useEffect(() => {
+    if (!isAuth) {
+      navigate("/");
+    }
+  }, [isAuth]);
 
   //* Dispatch for actions
   const dispatch = useDispatch();
@@ -36,7 +55,11 @@ const Payments = () => {
       <div className="container py-5 px-1 mx-auto">
         <div className="row justify-content-between justify-content-sm-center">
           <DashedCard className="card col-sm-6 p-0 m-3">
-            <Link to={"/new-payment"}> + </Link>
+            <Link to={"/new-payment"}>
+              +
+              <br />
+              <span>New method</span>
+            </Link>
           </DashedCard>
 
           {payments.map((payment) =>
@@ -56,7 +79,10 @@ const Payments = () => {
                     EXP: <span className="fw-bold">{payment.valid_until}</span>{" "}
                   </p>
                   <div className="text-center">
-                    <Link to={`/edit-payment/${payment.id}`}className="btn btn-primary">
+                    <Link
+                      to={`/edit-payment/${payment.id}`}
+                      className="btn btn-primary"
+                    >
                       Edit
                     </Link>
                     <a
@@ -85,9 +111,12 @@ const Payments = () => {
                     EXP: <span className="fw-bold">{payment.valid_until}</span>{" "}
                   </p>
                   <div className="text-center">
-                    <a href="#" className="btn btn-primary">
+                    <Link
+                      to={`/edit-payment/${payment.id}`}
+                      className="btn btn-primary"
+                    >
                       Edit
-                    </a>
+                    </Link>
                     <a
                       href="#"
                       onClick={() => deletePayment(Number(payment.id))}

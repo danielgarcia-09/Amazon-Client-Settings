@@ -12,6 +12,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import UserIndex from "./components/user/UserIndex";
 import NewUser from "./components/auth/NewUser";
 import EditPayment from "./components/payments/EditPayment";
+import Orders from "./components/orders/Orders";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -26,6 +27,7 @@ ReactDOM.render(
             <Route path="/payments" element={<Payments />} />
             <Route path="/new-payment" element={<CreatePayment />} />
             <Route path="/edit-payment/:id" element={<EditPayment />} />
+            <Route path="/orders" element={<Orders />} />
           </Routes>
         </BrowserRouter>
       </PersistGate>
