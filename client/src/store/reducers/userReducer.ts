@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 import { UserState } from "../../types";
-import { CREATE_USER_PAYMENT, DELETE_USER_PAYMENT,GET_USER, GET_USER_ORDERS, GET_USER_PAYMENTS, LOGIN_ERROR, SIGN_OFF_USER, UPDATE_USER_INFO, USER_AUTENTICATED } from "../actions/actionTypes";
+import { CREATE_USER_PAYMENT, DELETE_USER, DELETE_USER_PAYMENT,EDIT_USER_PAYMENT,GET_USER, GET_USER_ORDERS, GET_USER_PAYMENTS, LOGIN_ERROR, SIGN_OFF_USER, EDIT_USER_INFO, USER_AUTENTICATED } from "../actions/actionTypes";
 
 const initialState: UserState  = {
     user: {},
@@ -14,7 +14,7 @@ const initialState: UserState  = {
 
 export default function userReducer( state: UserState = initialState, action: AnyAction): UserState {
     switch(action.type) {
-        case UPDATE_USER_INFO:
+        case EDIT_USER_INFO:
         case GET_USER: {
             return {
                 ...state,
@@ -37,12 +37,13 @@ export default function userReducer( state: UserState = initialState, action: An
 
         case LOGIN_ERROR: {
             return {
-                ...state,
-                isAuth: false,
+                ...initialState,
                 loginError: action.payload,
+                token: null
             }
         }
 
+        case DELETE_USER:
         case SIGN_OFF_USER: {
             return {
                 ...initialState,
@@ -64,6 +65,7 @@ export default function userReducer( state: UserState = initialState, action: An
             }
         }
 
+        case EDIT_USER_PAYMENT:
         case CREATE_USER_PAYMENT: {
             return {
                 ...state,

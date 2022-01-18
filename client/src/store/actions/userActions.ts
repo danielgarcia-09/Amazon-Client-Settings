@@ -5,17 +5,37 @@ import tokenAuth from "../../config/token";
 import { IOrders, IPaymentMethod, IUser } from "../../types";
 import {
   CREATE_USER_PAYMENT,
+  DELETE_USER,
   DELETE_USER_PAYMENT,
+  EDIT_USER_PAYMENT,
   GET_USER,
   GET_USER_ORDERS,
   GET_USER_PAYMENTS,
   LOGIN_ERROR,
   SIGN_OFF_USER,
-  UPDATE_USER_INFO,
+  EDIT_USER_INFO,
   USER_AUTENTICATED,
+  USER_CREATED,
 } from "./actionTypes";
+import { Alert, AlertCanceled, AlertSuccess } from "../../config/alerts";
 
-export function LoginUser(email: string, password: string) {
+export function createUser(user: IUser) {
+  return async (dispatch: Dispatch) => {
+    try {
+      const insert = await axiosClient.post("/user", { user });
+
+      if (insert.data.changes === 1) {
+        dispatch({
+          type: USER_CREATED,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
+export function LoginUserAction(email: string, password: string) {
   return async (dispatch: Dispatch) => {
     try {
       const result = await axiosClient.post("/auth", { email, password });
@@ -27,7 +47,7 @@ export function LoginUser(email: string, password: string) {
       if (token) {
         tokenAuth(token);
       }
-      const user = await getAuthUser();
+      const user = await getAuthUserAction();
 
       dispatch({
         type: GET_USER,
@@ -45,7 +65,7 @@ const userAuthenticated = (token: string): AnyAction => ({
   payload: token,
 });
 
-const getAuthUser = async () => {
+const getAuthUserAction = async () => {
   try {
     const result = await axiosClient.get("/auth");
     const user: IUser = result.data;
@@ -61,7 +81,7 @@ const loginError = (msj: string): AnyAction => ({
   payload: msj,
 });
 
-export function signOff() {
+export function signOffAction() {
   return (dispatch: Dispatch) => {
     localStorage.removeItem("token");
     storage.removeItem("persist:root");
@@ -72,10 +92,10 @@ export function signOff() {
   };
 }
 
-export function editUserInfo(user: IUser) {
+export function editUserAction(user: IUser) {
   return async (dispatch: Dispatch) => {
     try {
-      const result = await axiosClient.put(`/user/${user.id}`, { user });
+      const result = await axiosClient.put(`/auth/${user.id}`, { user });
 
       dispatch(updateUserInfo(result.data.user));
     } catch (error: any) {
@@ -86,8 +106,36 @@ export function editUserInfo(user: IUser) {
 }
 
 const updateUserInfo = (user: IUser): AnyAction => ({
-  type: UPDATE_USER_INFO,
+  type: EDIT_USER_INFO,
   payload: user,
+});
+
+export function deleteUserAction(id: number) {
+  return async (dispatch: Dispatch) => {
+    const verify = await Alert("Do you really want to delete your user?");
+
+    if (verify.isConfirmed) {
+      try {
+        const result = await axiosClient.delete(`/auth/${id}`);
+
+        if (result.data.changes === 1) {
+          AlertSuccess();
+          dispatch(userDeleted());
+        }
+
+        return;
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    } else {
+      AlertCanceled();
+      return;
+    }
+  };
+}
+const userDeleted = (): AnyAction => ({
+  type: DELETE_USER,
 });
 
 export function obtainUserOrders(id: number | undefined, limit: number = 3) {
@@ -99,7 +147,7 @@ export function obtainUserOrders(id: number | undefined, limit: number = 3) {
 
       dispatch(getUserOrders(orders));
     } catch (error: any) {
-      console.error(error.response.data.error.message);
+      // console.error(error.response.data.error.message);
       return;
     }
   };
@@ -119,7 +167,7 @@ export function obtainUserPayment(id: number | undefined, limit: number = 3) {
 
       dispatch(getUserPayments(payments));
     } catch (error: any) {
-      console.error(error.response.data.error.message);
+      // console.error(error.response.data.error.message);
       return;
     }
   };
@@ -138,9 +186,10 @@ export function createUserPayment(payment: IPaymentMethod) {
       });
       const { lastInsertRowid } = result.data;
 
+      AlertSuccess();
       dispatch(postUserPayment({ id: lastInsertRowid, ...payment }));
     } catch (error: any) {
-      console.error(error.response.data.error.message);
+      // console.error(error.response.data.error.message);
       return;
     }
   };
@@ -151,14 +200,44 @@ const postUserPayment = (payment: IPaymentMethod): AnyAction => ({
   payload: payment,
 });
 
+export function editUserPaymentAction ( payment: IPaymentMethod ) {
+  return async ( dispatch: Dispatch ) => {
+    try {
+      const result = await axiosClient.put(`/payment/${payment.id}`, {payment_method: payment} );
+      if( result.data.changes === 1 ) {
+        dispatch(updateUserPayment(result.data.user));
+      }else {
+        return;
+      }
+    } catch (error: any) {
+      console.error(error.response.error.message);
+      return;
+    }
+  }
+}
+const updateUserPayment = ( payment: IPaymentMethod ): AnyAction => ({
+  type: EDIT_USER_PAYMENT,
+  payload: payment
+})
 export function deleteUserPayment(id: number) {
   return async (dispatch: Dispatch) => {
-    try {
-      const result = await axiosClient.delete(`/payment/${id}`);
-      console.log(result);
-      dispatch(deletePayment(id));
-    } catch (error: any) {
-      console.error(error.response.data.error.message);
+    const verify = await Alert("Do you really want to delete this?");
+
+    if (verify.isConfirmed) {
+      try {
+        const result = await axiosClient.delete(`/payment/${id}`);
+
+        if (result.data.changes === 1) {
+          AlertSuccess();
+          dispatch(deletePayment(id));
+        } else {
+          return;
+        }
+      } catch (error: any) {
+        console.error(error.response.data.error.message);
+        return;
+      }
+    } else {
       return;
     }
   };
@@ -168,3 +247,4 @@ const deletePayment = (id: number): AnyAction => ({
   type: DELETE_USER_PAYMENT,
   payload: id,
 });
+

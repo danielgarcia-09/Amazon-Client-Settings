@@ -1,14 +1,23 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserState } from "../../types";
-import { MainSection } from "../ui/Sections";
-import {
-  PaymentCompany,
-  PaymentDelete,
-  PaymentMethods,
-  PaymentService,
-} from "../ui/PaymentStyles";
 import { deleteUserPayment } from "../../store/actions/userActions";
+import Layout from "../ui/Layout";
+import styled from "@emotion/styled";
+
+const DashedCard = styled.div`
+  max-width: 300px;
+  border: 6px dashed gray;
+  text-align: center;
+  line-height: inherit;
+  font-size: 8rem;
+  
+  a {
+    text-decoration: none !important;
+    color: gray;
+  }
+  
+`;
 
 const Payments = () => {
   //* Global payments
@@ -17,37 +26,83 @@ const Payments = () => {
   //* Dispatch for actions
   const dispatch = useDispatch();
 
-  //* navigation router
-  const navigate = useNavigate();
-
-  const deletePayment = (id: number = 1) => {
+  const deletePayment = (id: number) => {
     dispatch(deleteUserPayment(id));
-
-    localStorage.removeItem("state");
-
-    navigate("/");
   };
 
   return (
-    <MainSection>
-      <h1>Payment Methods</h1>
-      <section className="payments">
-        <PaymentMethods>
-          {payments.map((payment) => (
-            <PaymentService key={payment.id}>
-              <PaymentCompany>{payment.company}</PaymentCompany>
-              <PaymentDelete onClick={() => deletePayment(payment.id)}>
-                X
-              </PaymentDelete>
+    <Layout>
+      <h1 className="text-center mt-5">Payment Methods</h1>
+      <div className="container py-5 px-1 mx-auto">
+        <div className="row justify-content-between justify-content-sm-center">
+          <DashedCard className="card col-sm-6 p-0 m-3">
+            <Link to={"/new-payment"}> + </Link>
+          </DashedCard>
 
-              <span>{payment.card_number}</span>
-              <br />
-              <p>Valid Until: {payment.valid_until}</p>
-            </PaymentService>
-          ))}
-        </PaymentMethods>
-      </section>
-    </MainSection>
+          {payments.map((payment) =>
+            payment.company === "VISA" ? (
+              <div
+                className="card col-sm-6 p-0 border-primary m-3"
+                style={{ maxWidth: "300px" }}
+                key={payment.id}
+              >
+                <div className="card-header fw-bold">{payment.company}</div>
+                <div className="card-body">
+                  <h5 className="card-title">
+                    {"**** **** **** " + payment.card_number?.substring(15)}
+                  </h5>
+                  <p className="card-text fw-bold">CVV: {payment.cvv}</p>
+                  <p className="card-text">
+                    EXP: <span className="fw-bold">{payment.valid_until}</span>{" "}
+                  </p>
+                  <div className="text-center">
+                    <Link to={`/edit-payment/${payment.id}`}className="btn btn-primary">
+                      Edit
+                    </Link>
+                    <a
+                      href="#"
+                      onClick={() => deletePayment(Number(payment.id))}
+                      className="btn btn-danger ms-2"
+                    >
+                      Delete
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                className="card col-sm-6 p-0 border-warning m-3"
+                style={{ maxWidth: "300px" }}
+                key={payment.id}
+              >
+                <div className="card-header fw-bold">{payment.company}</div>
+                <div className="card-body">
+                  <h5 className="card-title">
+                    {"**** **** **** " + payment.card_number?.substring(15)}
+                  </h5>
+                  <p className="card-text fw-bold">CVV: {payment.cvv}</p>
+                  <p className="card-text">
+                    EXP: <span className="fw-bold">{payment.valid_until}</span>{" "}
+                  </p>
+                  <div className="text-center">
+                    <a href="#" className="btn btn-primary">
+                      Edit
+                    </a>
+                    <a
+                      href="#"
+                      onClick={() => deletePayment(Number(payment.id))}
+                      className="btn btn-danger ms-2"
+                    >
+                      Delete
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+        </div>
+      </div>
+    </Layout>
   );
 };
 

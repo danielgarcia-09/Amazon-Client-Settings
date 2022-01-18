@@ -1,36 +1,31 @@
-import { compare, hash } from "bcryptjs";
-import React, { useEffect, useState } from "react";
-import { IUser, UserState } from "../../types";
+import React, { useState } from "react";
+import { IUser } from "../../types";
 import Layout from "../ui/Layout";
 import InputMask from "react-input-mask";
 import InputError from "../ui/InputError";
-import { useDispatch, useSelector } from "react-redux";
-import { editUserAction } from "../../store/actions/userActions";
+import { useDispatch } from "react-redux";
+import { createUser } from "../../store/actions/userActions";
 import { useNavigate } from "react-router-dom";
-const EditUser = () => {
-  
-  //* Global user
-  const { user, isAuth } = useSelector((state: UserState) => state);
 
-  //* Check if auth
-  useEffect(()=> {
-    if (!isAuth) {
-      navigate("/");
-    }
-  }, [isAuth])
+const NewUser = () => {
+  const stateConfig: IUser = {
+    id: undefined,
+    name: "",
+    email: "",
+    telephone: "",
+    user_name: "",
+    password: "",
+    role: "USER",
+  };
 
-  //* state
-  const [newUser, setNewUser] = useState({
-    ...user,
-    new_password: "",
-    confirm_password: "",
-  });
+  //* new user state
+  const [newUser, setNewUser] = useState(stateConfig);
 
   //! error state
   const [ error, setError ] = useState(false);
 
   //* Extracting values
-  const { email, name, telephone, user_name, password,role, new_password, confirm_password } = newUser;
+  const { email, name, telephone, user_name, password } = newUser;
 
   //* handling input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,30 +50,17 @@ const EditUser = () => {
   const navigate = useNavigate();
 
   //* handling submit
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const isSame = await compare(String(password), String(user.password))
-
-    if( isEmpty || isSame || new_password !== confirm_password) {
+    if( isEmpty ) {
       setError(true);
       return;
     }
 
     setError(false);
 
-    const payload: IUser = {
-      id: user.id,
-      name,
-      email,
-      user_name,
-      password: await hash(String(password), 10),
-      telephone,
-      role
-    }
-
-    console.log(payload);
-    dispatch( editUserAction( payload ) );
+    dispatch( createUser( newUser ) );
 
     navigate('/');
   };
@@ -86,7 +68,7 @@ const EditUser = () => {
   return (
     <Layout>
       <div className="container px-5 my-5">
-        <h1 className="text-center mb-4">Edit Account</h1>
+        <h1 className="text-center mb-4">Create Account</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label" htmlFor="email">
@@ -146,31 +128,16 @@ const EditUser = () => {
           </div>
           <div className="mb-3">
             <label className="form-label" htmlFor="password">
-              New Password
+              Password
             </label>
             <input
-              value={new_password}
+              value={password}
               onChange={handleChange}
               className="form-control"
-              name="new_password"
+              name="password"
               type="password"
               placeholder="Password"
             />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label" htmlFor="password">
-              Confirm Password
-            </label>
-            <input
-              value={confirm_password}
-              onChange={handleChange}
-              className="form-control"
-              name="confirm_password"
-              type="password"
-              placeholder="Password"
-            />
-            {(confirm_password !== new_password) && <InputError active={true} message="Passwords must match" />}
           </div>
           
           {error && <InputError active={error} message="Must fill all fields" />}
@@ -188,4 +155,4 @@ const EditUser = () => {
     </Layout>
   );
 };
-export default EditUser;
+export default NewUser;

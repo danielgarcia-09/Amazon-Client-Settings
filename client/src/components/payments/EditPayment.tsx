@@ -4,20 +4,19 @@ import Layout from "../ui/Layout";
 import InputMask from "react-input-mask";
 import InputError from "../ui/InputError";
 import { useDispatch, useSelector } from "react-redux";
-import { createUserPayment, editUserAction } from "../../store/actions/userActions";
-import { useNavigate } from "react-router-dom";
+import { createUserPayment, editUserPaymentAction } from "../../store/actions/userActions";
+import { useNavigate, useParams } from "react-router-dom";
 
-const CreatePayment = () => {
-  //* initial state
-  const stateConfig: IPaymentMethod = {
-    card_number: "",
-    cvv: 0,
-    company: "",
-    valid_until: "",
-  };
+const EditPayment = () => {
 
-  //* Global user
-  const { user, isAuth } = useSelector((state: UserState) => state);
+  //* Global array of  payments
+  const { payments, isAuth } = useSelector((state: UserState) => state);
+
+  //* URL Params
+  let params = useParams();
+
+  //* Payment to edit
+  const edit = payments.find( p => p.id === params.id);
 
   //* Check if auth
   useEffect(() => {
@@ -27,31 +26,31 @@ const CreatePayment = () => {
   }, [isAuth]);
 
   //* state
-  const [newPayment, setNewPayment] = useState<IPaymentMethod>(stateConfig);
+  const [editPayment, setEditPayment] = useState({...edit});
 
   //! error state
   const [error, setError] = useState(false);
 
   //* Extracting values
-  const { card_number, cvv, company, valid_until } = newPayment;
+  const { id, user_id, card_number, cvv, company, valid_until } = editPayment;
 
   //* handling input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPayment({
-      ...newPayment,
+    setEditPayment({
+      ...editPayment,
       [e.target.name]: e.target.value,
     });
   };
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNewPayment({
-      ...newPayment,
+    setEditPayment({
+      ...editPayment,
       [e.target.name] : e.target.value
     })
   }
 
   //* Check for empty values
-  const isEmpty = Object.values(newPayment).some((v) => {
+  const isEmpty = Object.values(editPayment).some((v) => {
     if (v === "") {
       return true;
     }
@@ -76,14 +75,15 @@ const CreatePayment = () => {
     setError(false);
 
     const payload: IPaymentMethod = {
-      user_id: user.id,
+      id,
+      user_id,
       card_number,
       cvv,
       company,
       valid_until,
     };
 
-    dispatch(createUserPayment(payload));
+    dispatch( editUserPaymentAction(payload) );
 
     navigate("/payments");
   };
@@ -163,4 +163,4 @@ const CreatePayment = () => {
     </Layout>
   );
 };
-export default CreatePayment;
+export default EditPayment;

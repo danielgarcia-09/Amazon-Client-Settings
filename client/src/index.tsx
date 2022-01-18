@@ -9,7 +9,9 @@ import EditUser from "./components/user/EditUser";
 import Payments from "./components/payments/Payments";
 import CreatePayment from "./components/payments/CreatePayment";
 import { PersistGate } from "redux-persist/integration/react";
-import UserInfo from "./components/user/UserInfo";
+import UserIndex from "./components/user/UserIndex";
+import NewUser from "./components/auth/NewUser";
+import EditPayment from "./components/payments/EditPayment";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,10 +20,12 @@ ReactDOM.render(
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<App />} />
-            <Route path="/user" element={<UserInfo />} />
-            <Route path="/edit_user/:id" element={<EditUser />} />
+            <Route path="/user" element={<UserIndex />} />
+            <Route path="/new-user" element={<NewUser/>} />
+            <Route path="/edit-user/:id" element={<EditUser />} />
             <Route path="/payments" element={<Payments />} />
             <Route path="/new-payment" element={<CreatePayment />} />
+            <Route path="/edit-payment/:id" element={<EditPayment />} />
           </Routes>
         </BrowserRouter>
       </PersistGate>

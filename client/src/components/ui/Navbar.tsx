@@ -2,26 +2,25 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { signOff } from "../../store/actions/userActions";
+import { signOffAction } from "../../store/actions/userActions";
 import { UserState } from "../../types";
 
 const Navbar = () => {
-
   //* Redux store
-  const {user, isAuth} = useSelector((state: UserState) => state);
+  const { user, isAuth } = useSelector((state: UserState) => state);
 
   //* Dispatch
   const dispatch = useDispatch();
 
   //* Sign off
   const signOut = () => {
-    dispatch( signOff() );
-  }
+    dispatch(signOffAction());
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/">
           Solvex Test
         </a>
         <button
@@ -38,20 +37,28 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarText">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link" aria-current="page" href="#">
+              <Link
+                className="nav-link"
+                aria-current="page"
+                to={isAuth ? "/user" : "/"}
+              >
                 Home
-              </a>
+              </Link>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Features
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Pricing
-              </a>
-            </li>
+            {isAuth && (
+              <Fragment>
+                <li className="nav-item">
+                  <a className="nav-link" href="orders">
+                    Orders
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="payments">
+                    Payments
+                  </a>
+                </li>
+              </Fragment>
+            )}
           </ul>
           {isAuth ? (
             <Fragment>
@@ -61,20 +68,22 @@ const Navbar = () => {
                 </Link>
               </span>
               <span className="navbar-text">
-                <a className="nav-link" onClick={()=> signOut()} href="#">Sign Out</a>
+                <Link className="nav-link" onClick={() => signOut()} to="#">
+                  Sign Out
+                </Link>
               </span>
             </Fragment>
           ) : (
             <Fragment>
               <span className="navbar-text">
-                <a className="nav-link" href="#">
+                <Link className="nav-link" to="/">
                   Login
-                </a>
+                </Link>
               </span>
               <span className="navbar-text">
-                <a className="nav-link" href="#">
+                <Link className="nav-link" to="/new-user">
                   Sign Up
-                </a>
+                </Link>
               </span>
             </Fragment>
           )}

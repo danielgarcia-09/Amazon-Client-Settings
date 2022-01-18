@@ -31,8 +31,8 @@ export interface IUser {
     user_name?: string,
     password?: string,
     email?: string,
-    address?: string,
-    telephone?: string
+    telephone?: string,
+    role?: string,
 }
 export type UserState = {
     user: IUser,

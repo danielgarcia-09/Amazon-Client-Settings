@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import storage from "redux-persist/lib/storage";
-import { LoginUser } from "../../store/actions/userActions";
+import { LoginUserAction } from "../../store/actions/userActions";
 import { UserState } from "../../types";
 
 const LoginForm = styled.form`
@@ -61,7 +61,7 @@ const Login = () => {
       return;
     }
 
-    dispatch(LoginUser(email, password));
+    dispatch(LoginUserAction(email, password));
   };
 
   return (
@@ -95,7 +95,7 @@ const Login = () => {
         <Link to={"new-user"}>Create a new account</Link>
       </span>
 
-      <div className="d-grid gap-1">
+      <div className="d-grid">
         <button type="submit" className="mt-4 btn btn-lg btn-primary">
           Login
         </button>

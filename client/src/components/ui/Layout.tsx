@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import React, { Fragment } from "react";
-import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap/dist/css/bootstrap.css";
 import Navbar from "./Navbar";
 type Props = {
   children: React.ReactNode;
@@ -13,10 +13,10 @@ const MainContainer = styled.div`
 const Layout = ({ children }: Props) => {
   return (
     <Fragment>
-        <Navbar/>
-      <MainContainer>{children}</MainContainer>
+      <Navbar/>
+      <MainContainer>{children}</MainContainer>;
     </Fragment>
-  );
+  )
 };
 
 export default Layout;
