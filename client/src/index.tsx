@@ -13,6 +13,9 @@ import UserIndex from "./components/user/UserIndex";
 import NewUser from "./components/auth/NewUser";
 import EditPayment from "./components/payments/EditPayment";
 import Orders from "./components/orders/Orders";
+import CreateOrder from "./components/orders/CreateOrder";
+import Address from "./components/address/Address";
+import CreateAddress from "./components/address/CreateAddress";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -28,6 +31,9 @@ ReactDOM.render(
             <Route path="/new-payment" element={<CreatePayment />} />
             <Route path="/edit-payment/:id" element={<EditPayment />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/new-order" element={<CreateOrder />} />
+            <Route path="/address" element={<Address />} />
+            <Route path="/new-address" element={<CreateAddress />} />
           </Routes>
         </BrowserRouter>
       </PersistGate>

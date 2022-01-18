@@ -30,8 +30,8 @@ authController.createUser = async (req, res) => {
     const newUser = db
       .prepare(
         `INSERT INTO users 
-        (name,user_name,password,email,address,telephone,role)
-        values (@name,@user_name,@password,@email,@address,@telephone, @role)
+        (name,user_name,password,email,telephone,role)
+        values (@name,@user_name,@password,@email,@telephone, @role)
     `
       )
       .run(user);
@@ -111,7 +111,6 @@ authController.editUser = async (req, res) => {
             name = @name,
             user_name = @user_name, 
             password = @password,
-            address = @address,
             telephone = @telephone
         WHERE id = ${id}`
       )
@@ -140,7 +139,10 @@ authController.editUser = async (req, res) => {
 authController.deleteUser = (req, res) => {
   const { id } = req.params;
 
-  const query = db.prepare(`DELETE FROM USERS WHERE id = ${id}`);
+  db.prepare(`DELETE FROM ORDERS WHERE user_id = ${id}`).run();
+  db.prepare(`DELETE FROM paymentMethods WHERE user_id = ${id}`).run();
+  db.prepare(`DELETE FROM address WHERE user_id = ${id}`).run();
+  const query = db.prepare(`DELETE FROM USERS WHERE id = ${id}`).run();
 
   if (query.changes === 0)
     return res.status(404).json({

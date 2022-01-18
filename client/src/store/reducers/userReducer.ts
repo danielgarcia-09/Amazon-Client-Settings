@@ -1,11 +1,13 @@
+import { stat } from "fs";
 import { AnyAction } from "redux";
 import { UserState } from "../../types";
-import { CREATE_USER_PAYMENT, DELETE_USER, DELETE_USER_PAYMENT,EDIT_USER_PAYMENT,GET_USER, GET_USER_ORDERS, GET_USER_PAYMENTS, LOGIN_ERROR, SIGN_OFF_USER, EDIT_USER_INFO, USER_AUTENTICATED } from "../actions/actionTypes";
+import { CREATE_USER_PAYMENT, DELETE_USER, DELETE_USER_PAYMENT,EDIT_USER_PAYMENT,GET_USER, GET_USER_ORDERS, GET_USER_PAYMENTS, LOGIN_ERROR, SIGN_OFF_USER, EDIT_USER_INFO, USER_AUTENTICATED, CREATE_USER_ORDER } from "../actions/actionTypes";
 
 const initialState: UserState  = {
     user: {},
     orders: [],
     payments: [],
+    adresses: [],
     loginError: null,
     isAuth: false,
     token: localStorage.getItem('token'),
@@ -51,37 +53,45 @@ export default function userReducer( state: UserState = initialState, action: An
             }
         }
 
-        case GET_USER_ORDERS: {
-            return {
-                ...state,
-                orders: action.payload
-            }
-        }
-
+        
         case GET_USER_PAYMENTS: {
             return {
                 ...state,
                 payments: action.payload
             }
         }
-
+        
         case EDIT_USER_PAYMENT:
-        case CREATE_USER_PAYMENT: {
-            return {
-                ...state,
-                payments: [action.payload,...state.payments]
+            case CREATE_USER_PAYMENT: {
+                return {
+                    ...state,
+                    payments: [action.payload,...state.payments]
+                }
+            }
+            
+            case DELETE_USER_PAYMENT: {
+                return {
+                    ...state,
+                    payments: state.payments.filter( p => p.id !== action.payload)
+                }
+            }
+            
+            case GET_USER_ORDERS: {
+                return {
+                    ...state,
+                    orders: action.payload
+                }
+            }
+
+            case CREATE_USER_ORDER: {
+                return {
+                    ...state,
+                    orders: [action.payload, ...state.orders]
+                }
+            }
+
+            default: {
+                return state;
             }
         }
-
-        case DELETE_USER_PAYMENT: {
-            return {
-                ...state,
-                payments: state.payments.filter( p => p.id !== action.payload)
-            }
-        }
-
-        default: {
-            return state;
-        }
-    }
 }

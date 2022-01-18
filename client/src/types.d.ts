@@ -6,15 +6,24 @@ export interface IPaymentMethod {
     valid_until?: string,
     cvv?: number 
 }
+export interface IAddress {
+    id?: number,
+    user_id?: number,
+    address1?: string,
+    address2?: string,
+    zip_code?: string,
+}
 
 export interface IOrders {
-    order_id: number,
-    user_id: number,
-    name: string,
-    price: number,
-    rating: number,
-    manufacturer: string,
-    item_info? : string
+    order_id?: number,
+    user_id?: number,
+    address_id?: number,
+    name?: string,
+    price?: number,
+    rating?: number,
+    manufacturer?: string,
+    item_info? : string,
+    quantity?: number
 }
 
 export interface IMessages {
@@ -41,5 +50,6 @@ export type UserState = {
     loginError: string | null,
     orders: IOrders[],
     payments: IPaymentMethod[],
+    adresses: IAddress[],
     loading: boolean
 }

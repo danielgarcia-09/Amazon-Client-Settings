@@ -7,12 +7,10 @@ CREATE TABLE users (
 	user_name TEXT UNIQUE,
 	password TEXT UNIQUE,
 	email TEXT UNIQUE,
-	address TEXT,
-	telephone TEXT UNIQUE
+	telephone TEXT UNIQUE,
+	role TEXT
 );
 
-INSERT INTO users (name,user_name,password,email,address,telephone)
-values ('Pablo', 'pablo07','dnalsdsnadlkasdnas','pablo@gmail.com','lacretatumama','8098098');
 
 CREATE TABLE orders(
 	order_id INTEGER PRIMARY KEY,
@@ -47,3 +45,12 @@ CREATE TABLE messages(
 );
 
 
+CREATE TABLE address(
+	id INTEGER PRIMARY KEY,
+	address_id INTEGER,
+	user_id INTEGER,
+	address1 TEXT,
+	address2 TEXT,
+	zip_code TEXT,
+	FOREIGN KEY (user_id) REFERENCES users(id)
+)

@@ -16,6 +16,7 @@ import {
   EDIT_USER_INFO,
   USER_AUTENTICATED,
   USER_CREATED,
+  CREATE_USER_ORDER,
 } from "./actionTypes";
 import { Alert, AlertCanceled, AlertSuccess } from "../../config/alerts";
 
@@ -137,6 +138,7 @@ export function deleteUserAction(id: number) {
 const userDeleted = (): AnyAction => ({
   type: DELETE_USER,
 });
+// * **********************************************************************************
 
 export function obtainUserOrders(id: number | undefined, limit: number = 3) {
   return async (dispatch: Dispatch) => {
@@ -157,6 +159,23 @@ const getUserOrders = (orders: IOrders[]): AnyAction => ({
   type: GET_USER_ORDERS,
   payload: orders,
 });
+
+export function createOrderAction(user_id: number, order: IOrders) {
+  return async (dispatch: Dispatch) => {
+    try {
+      const result = await axiosClient.post(`/orders/${user_id}`, {order});
+      if( result.data.changes === 1 ) dispatch( createOrder( order ) );
+
+      return;
+    } catch (error) {
+      return;
+    }
+  };
+}
+const createOrder = ( order: IOrders ): AnyAction => ({
+  type: CREATE_USER_ORDER,
+  payload: order
+})
 
 export function obtainUserPayment(id: number | undefined, limit: number = 3) {
   return async (dispatch: Dispatch) => {
@@ -200,25 +219,27 @@ const postUserPayment = (payment: IPaymentMethod): AnyAction => ({
   payload: payment,
 });
 
-export function editUserPaymentAction ( payment: IPaymentMethod ) {
-  return async ( dispatch: Dispatch ) => {
+export function editUserPaymentAction(payment: IPaymentMethod) {
+  return async (dispatch: Dispatch) => {
     try {
-      const result = await axiosClient.put(`/payment/${payment.id}`, {payment_method: payment} );
-      if( result.data.changes === 1 ) {
-        dispatch(editUserPayment( payment ));
-      }else {
+      const result = await axiosClient.put(`/payment/${payment.id}`, {
+        payment_method: payment,
+      });
+      if (result.data.changes === 1) {
+        dispatch(editUserPayment(payment));
+      } else {
         return;
       }
     } catch (error: any) {
       console.error(error.response.error.message);
       return;
     }
-  }
+  };
 }
-const editUserPayment = ( payment: IPaymentMethod ): AnyAction => ({
+const editUserPayment = (payment: IPaymentMethod): AnyAction => ({
   type: EDIT_USER_PAYMENT,
-  payload: payment
-})
+  payload: payment,
+});
 export function deleteUserPayment(id: number) {
   return async (dispatch: Dispatch) => {
     const verify = await Alert("Do you really want to delete this?");
@@ -247,4 +268,3 @@ const deletePayment = (id: number): AnyAction => ({
   type: DELETE_USER_PAYMENT,
   payload: id,
 });
-
