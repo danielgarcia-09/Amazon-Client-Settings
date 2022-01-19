@@ -80,7 +80,7 @@ const EditUser = () => {
     console.log(payload);
     dispatch( editUserAction( payload ) );
 
-    navigate('/');
+    navigate('/user');
   };
 
   return (
