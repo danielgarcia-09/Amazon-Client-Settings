@@ -68,7 +68,7 @@ const Navbar = () => {
           {isAuth ? (
             <Fragment>
               <span className="navbar-text">
-                <Link className="nav-link" to={"/user-info"}>
+                <Link className="nav-link" to={"/user"}>
                   {user.name}
                 </Link>
               </span>
