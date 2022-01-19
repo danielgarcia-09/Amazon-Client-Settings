@@ -22,6 +22,7 @@ import {
   GET_ADDRESS,
   DELETE_ADDRESS,
   EDIT_ORDER,
+  DELETE_ORDER,
 } from "./actionTypes";
 import { Alert, AlertCanceled, AlertSuccess } from "../../config/alerts";
 
@@ -45,7 +46,7 @@ export function LoginUserAction(email: string, password: string) {
   return async (dispatch: Dispatch) => {
     try {
       const result = await axiosClient.post("/auth", { email, password });
-
+      
       dispatch(userAuthenticated(result.data.token));
 
       const token = localStorage.getItem("token");
@@ -105,7 +106,7 @@ export function editUserAction(user: IUser) {
 
       dispatch(updateUserInfo(result.data.user));
     } catch (error: any) {
-      console.error(error.response.error.message);
+      console.error(error.response);
       return;
     }
   };
@@ -229,7 +230,7 @@ export function deleteOrderAction(id: number) {
 }
 
 const deleteOrder = (id: number): AnyAction => ({
-  type: DELETE_USER_PAYMENT,
+  type: DELETE_ORDER,
   payload: id,
 });
 

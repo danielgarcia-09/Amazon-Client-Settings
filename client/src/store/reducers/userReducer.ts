@@ -1,4 +1,3 @@
-import { stat } from "fs";
 import { AnyAction } from "redux";
 import { UserState } from "../../types";
 import {
@@ -82,7 +81,12 @@ export default function userReducer(
       };
     }
 
-    case EDIT_USER_PAYMENT:
+    case EDIT_USER_PAYMENT:{
+      return {
+        ...state,
+        payments: [action.payload, ...state.payments.filter((p) => p.id !== action.payload.id)]
+      }
+    }
     case CREATE_USER_PAYMENT: {
       return {
         ...state,
@@ -104,7 +108,12 @@ export default function userReducer(
       };
     }
 
-    case EDIT_ORDER:
+    case EDIT_ORDER:{
+      return {
+        ...state,
+        orders: [action.payload, ...state.orders.filter( o => o.order_id !== action.payload.order_id)]
+      }
+    }
     case CREATE_USER_ORDER: {
       return {
         ...state,

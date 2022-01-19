@@ -31,7 +31,7 @@ authController.createUser = async (req, res) => {
       .prepare(
         `INSERT INTO users 
         (name,user_name,password,email,telephone,role)
-        values (@name,@user_name,@password,@email,@telephone, @role)
+        values (@name,@user_name,@password,@email,@telephone,@role)
     `
       )
       .run(user);
@@ -105,6 +105,7 @@ authController.editUser = async (req, res) => {
   const { user } = req.body;
 
   try {
+    user.password = await formatPwd(user.password);
     const query = db
       .prepare(
         `UPDATE USERS SET 
@@ -113,7 +114,7 @@ authController.editUser = async (req, res) => {
             password = @password,
             telephone = @telephone,
             email = @email
-        WHERE id = ${id}`
+        WHERE id = ${Number(id)}`
       )
       .run(user);
 
@@ -129,6 +130,7 @@ authController.editUser = async (req, res) => {
       .get();
     return res.status(200).json({ user: updatedUser });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       error: {
         message: error.message,

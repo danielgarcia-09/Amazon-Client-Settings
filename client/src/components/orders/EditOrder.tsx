@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { IOrders, UserState } from "../../types";
 import Layout from "../ui/Layout";
-import InputMask from "react-input-mask";
 import InputError from "../ui/InputError";
 import { useDispatch, useSelector } from "react-redux";
-import {  } from "../../store/actions/userActions";
+import { editOrdersAction } from "../../store/actions/userActions";
 import { useNavigate, useParams } from "react-router-dom";
 import { isEmpty } from "../../config/isEmpty";
 
@@ -65,18 +64,16 @@ const EditOrder = () => {
     }
 
     setError(false);
-console.log(editOrder);
 
+    dispatch( editOrdersAction(editOrder));
 
-    // dispatch((newOrder));
-
-    // navigate("/orders");
+    navigate("/orders");
   };
 
   return (
     <Layout>
       <div className="container px-5 my-5">
-        <h1 className="text-center mb-4">Create Order</h1>
+        <h1 className="text-center mb-4">Edit Order</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label" htmlFor="name">
@@ -129,6 +126,7 @@ console.log(editOrder);
               min={1}
               max={10}
               placeholder="Quantity"
+              required
             />
           </div>
 

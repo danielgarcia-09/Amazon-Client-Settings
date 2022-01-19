@@ -83,7 +83,7 @@ const Orders = () => {
                 </div>
                 <div className="card-bottom text-center">
                     <Link
-                      to={`/edit-payment/${order.order_id}`}
+                      to={`/edit-order/${order.order_id}`}
                       className="btn btn-primary"
                     >
                       Edit

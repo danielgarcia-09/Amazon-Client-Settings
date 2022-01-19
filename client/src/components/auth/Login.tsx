@@ -76,6 +76,7 @@ const Login = () => {
           name="email"
           aria-describedby="emailHelp"
           placeholder="Enter email"
+          required
         />
         <small id="emailHelp" className="form-text text-danger">
           {loginError}
@@ -89,6 +90,7 @@ const Login = () => {
           className="form-control"
           name="password"
           placeholder="Password"
+          required
         />
       </div>
       <span>

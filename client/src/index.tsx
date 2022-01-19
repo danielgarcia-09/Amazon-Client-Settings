@@ -17,6 +17,7 @@ import CreateOrder from "./components/orders/CreateOrder";
 import Address from "./components/address/Address";
 import CreateAddress from "./components/address/CreateAddress";
 import EditAddress from "./components/address/EditAddress";
+import EditOrder from "./components/orders/EditOrder";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -32,6 +33,7 @@ ReactDOM.render(
             <Route path="/new-payment" element={<CreatePayment />} />
             <Route path="/edit-payment/:id" element={<EditPayment />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/edit-order/:id" element={<EditOrder />} />
             <Route path="/new-order" element={<CreateOrder />} />
             <Route path="/address" element={<Address />} />
             <Route path="/new-address" element={<CreateAddress />} />

@@ -48,19 +48,19 @@ const Navbar = () => {
             {isAuth && (
               <Fragment>
                 <li className="nav-item">
-                  <a className="nav-link" href="orders">
+                  <Link className="nav-link" to="/orders">
                     Orders
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="payments">
+                  <Link className="nav-link" to="/payments">
                     Payments
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="address">
+                  <Link className="nav-link" to="/address">
                     Address
-                  </a>
+                  </Link>
                 </li>
               </Fragment>
             )}
@@ -68,7 +68,7 @@ const Navbar = () => {
           {isAuth ? (
             <Fragment>
               <span className="navbar-text">
-                <Link className="nav-link" to={"user-info"}>
+                <Link className="nav-link" to={"/user-info"}>
                   {user.name}
                 </Link>
               </span>

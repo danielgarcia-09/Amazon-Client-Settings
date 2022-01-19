@@ -1,4 +1,4 @@
-import { compare, hash } from "bcryptjs";
+import { compare } from "bcryptjs";
 import React, { useEffect, useState } from "react";
 import { IUser, UserState } from "../../types";
 import Layout from "../ui/Layout";
@@ -72,7 +72,7 @@ const EditUser = () => {
       name,
       email,
       user_name,
-      password: await hash(String(password), 10),
+      password: new_password,
       telephone,
       role
     }
@@ -155,6 +155,8 @@ const EditUser = () => {
               name="new_password"
               type="password"
               placeholder="Password"
+              minLength={8}
+              required
             />
           </div>
 
@@ -169,6 +171,8 @@ const EditUser = () => {
               name="confirm_password"
               type="password"
               placeholder="Password"
+              minLength={8}
+              required
             />
             {(confirm_password !== new_password) && <InputError active={true} message="Passwords must match" />}
           </div>

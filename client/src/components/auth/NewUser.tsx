@@ -1,13 +1,24 @@
-import React, { useState } from "react";
-import { IUser } from "../../types";
+import React, { useEffect, useState } from "react";
+import { IUser, UserState } from "../../types";
 import Layout from "../ui/Layout";
 import InputMask from "react-input-mask";
 import InputError from "../ui/InputError";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../store/actions/userActions";
 import { useNavigate } from "react-router-dom";
 
 const NewUser = () => {
+
+  //* Global user
+  const { isAuth } = useSelector((state: UserState) => state);
+
+  //* Check if auth
+  useEffect(()=> {
+    if (!isAuth) {
+      navigate("/");
+    }
+  }, [isAuth])
+
   const stateConfig: IUser = {
     id: undefined,
     name: "",
@@ -137,6 +148,8 @@ const NewUser = () => {
               name="password"
               type="password"
               placeholder="Password"
+              minLength={8}
+              required
             />
           </div>
           
