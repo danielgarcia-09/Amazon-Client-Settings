@@ -170,7 +170,8 @@ export function createOrderAction(user_id: number, order: IOrders) {
   return async (dispatch: Dispatch) => {
     try {
       const result = await axiosClient.post(`/orders/${user_id}`, { order });
-      if (result.data.changes === 1) dispatch(createOrder(order));
+      const { changes, lastInsertRowid } = result.data;
+      if (changes === 1) dispatch(createOrder({order_id:lastInsertRowid,  ...order}));
 
       return;
     } catch (error) {
