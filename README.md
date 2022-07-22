@@ -1,4 +1,3 @@
-# Solvex Test
 
 [CLIENT] : React app using REDUX 
 
